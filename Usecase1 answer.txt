@@ -1,0 +1,11 @@
+1)gsutil mb gs://dpusecases
+2)gsutil cp C:\Users\hi\Downloads\dim_customer.csv gs://dpusecases
+3)bq mk -d stage
+4)bq mk -t stage.usecase1 customer_code:STRING,customer:STRING,platform:STRING,channel:STRING,market:STRING,sub_zone:STRING,region:STRING-->>consider all datatypes as STRING only.
+5)bq show stage.usecase1
+6)bq load --source_format=CSV -skip_leading_rows=1 stage.usecase1 gs://dpusecases/dim_customer.csv
+7)bq mk -d history
+8)bq mk -t history.usecase1 customer_code:INTEGER,customer:STRING,platform:STRING,channel:STRING,market:STRING,sub_zone:STRING,region:STRING,pincode:INTEGER,location:STRING-->>Add 2 new empty columns as the datatype you want.
+9)bq query --use_legacy_sql=false INSERT INTO history.usecase1 SELECT CAST(customer_code AS INTEGER) ,customer STRING,platform STRING,channel STRING,market STRING,sub_zone STRING,region STRING,5344325 AS pincode,'Hyderabad' AS location FROM stage.usecase1
+10)bq show history.usecase1
+11)bq query --use_legacy_sql=false create view history.viewforusecase1 as select * from history.usecase1
